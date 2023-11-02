@@ -13,9 +13,11 @@ class Exercise05Test extends TestCase
 
     public function test_call_put_stock_should_increase_stock_by_1(): void
     {
-        $a = Article::create(['reference' => 'test',
-                              'quantity'  => 0]);
-                              
+        $a = Article::create([
+            'reference' => 'test',
+            'quantity'  => 0
+        ]);
+
         $response = $this->put(route('articles.stock', $a));
 
         $a = Article::find($a->id);
@@ -25,11 +27,13 @@ class Exercise05Test extends TestCase
     // bonus, display a flash message to confirm action to user
     public function test_call_put_stock_should_show_a_user_confirmation(): void
     {
-        $a = Article::create(['reference' => 'test',
-                              'quantity'  => 0]);
-                              
+        $a = Article::create([
+            'reference' => 'test',
+            'quantity'  => 0
+        ]);
+
         $response = $this->put(route('articles.stock', $a));
 
-        $response->assertRedirectContains('Stock increased !');
+        $this->followRedirects($response)->assertSee('Stock increased !');
     }
 }

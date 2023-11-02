@@ -22,8 +22,9 @@ class StoreArticleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'reference' => 'required|min:5',
-            'quantity' => 'numeric'
+            'reference' => 'required|min:8',
+            'quantity' => 'required|numeric',
+            'nota' => 'nullable|string',
         ];
     }
 }

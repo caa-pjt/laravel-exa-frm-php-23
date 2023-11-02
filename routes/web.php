@@ -18,4 +18,7 @@ use App\Http\Controllers\ArticleController;
 
 Route::resource('articles', ArticleController::class);
 
+// Route pour incrémenter un article du stock
+Route::get('articles/{article}/increment-stock', [ArticleController::class, "incrementStock"])->name('articles.incrementStock');
+
 Route::get('/', [ArticleController::class, 'index']);

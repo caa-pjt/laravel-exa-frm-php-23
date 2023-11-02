@@ -20,10 +20,12 @@ class Exercise01Test extends TestCase
 
     public function test_store_with_nota(): void
     {
-        $response = $this->post(route('articles.store', ['reference' => 'test very long',
-                                                         'nota' => 'This is a nota']));
+        $response = $this->post(route('articles.store', [
+            'reference' => 'test very long',
+            'nota' => 'This is a nota'
+        ]));
 
-        $response->assertRedirectContains('This is a nota');
+        $this->followRedirects($response)->assertSee('This is a nota');
     }
 
     public function test_index_show_nota(): void

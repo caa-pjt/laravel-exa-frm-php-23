@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Http\Requests\StoreArticleRequest;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ArticleController extends Controller
 {
@@ -14,7 +15,11 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        return view('articles.index', ['articles' => Article::all()]);
+
+
+        $count = Article::sum('quantity');
+
+        return view('articles.index', ['articles' => Article::all(), "count" => $count]);
     }
 
     /**
@@ -22,7 +27,8 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        return view('articles.create');
+        $article = new Article();
+        return view('articles.create', compact('article'));
     }
 
     /**
@@ -47,7 +53,7 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        //
+        return view("articles.edit", ["article" => $article]);
     }
 
     /**
@@ -55,7 +61,8 @@ class ArticleController extends Controller
      */
     public function update(Request $request, Article $article)
     {
-        //
+        $article->update($request->validated());
+        return redirect()->route("articles.index")->with("success", "Article updated successfully");
     }
 
     /**
@@ -63,7 +70,21 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
+
+        if ($article->quantity > 0) {
+            return redirect()->route('articles.index')->with('error', 'Cannot delete an article with stock greater than 0');
+        }
+
         $article->delete();
         return redirect()->route('articles.index')->with('success', 'Article deleted successfully');
+    }
+
+
+    public function incrementStock(Article $article)
+    {
+        $art = Article::findOrFail($article->id);
+        $art->quantity++;
+        $art->save();
+        return redirect()->route('articles.index')->with('success', 'Stock increased for the article');
     }
 }

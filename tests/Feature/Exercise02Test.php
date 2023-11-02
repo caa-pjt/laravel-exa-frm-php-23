@@ -24,8 +24,10 @@ class Exercise02Test extends TestCase
     {
         $a = Article::create(['reference' => 'test']);
 
-        $response = $this->put(route('articles.update', ['article' => $a,
-                                                         'reference' => 'Test']));
+        $response = $this->put(route('articles.update', [
+            'article' => $a,
+            'reference' => 'Test'
+        ]));
 
         $response->assertInvalid('reference');
     }
@@ -34,9 +36,11 @@ class Exercise02Test extends TestCase
     {
         $a = Article::create(['reference' => 'test']);
 
-        $response = $this->put(route('articles.update', ['article' => $a,
-                                                         'reference' => 'Very long reference']));
+        $response = $this->put(route('articles.update', [
+            'article' => $a,
+            'reference' => 'Very long reference'
+        ]));
 
-        $response->assertRedirectContains('Very long reference');
+        $this->followRedirects($response)->assertSee('Very long reference');
     }
 }
